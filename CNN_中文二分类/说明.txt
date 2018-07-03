@@ -1,0 +1,58 @@
+该文本分类模型的说明：
+原paper：Convolutional Neural Networks for Sentence Classification
+简介：是一个基于卷积神经网络的文本分类模型，该简化版代码用于文本的二分类（中英文皆可），文本的数值化使用one-hot的表示方式，CNN模型中使用了dropout机制。
+
+代码的执行流程：
+
+1、初始数据：按照类别存储在/data文件夹下，每一个类别一个txt，其中每一行代表一条数据，这里总共有两类（数据来源于搜狗开源的新闻分类语料精简版）
+2、中文分类与英文分类的一个主要区别就是中文需要进行分词处理（利用开源的工具JieBa分词）
+3、命令行：python fenci_jieba.py，对原始的中文数据进行分词处理，处理后的结果存储到文件夹/fenci，手动创建了两个分别对应的英文的文件（因为tensorflow不能读取中文文件名） ，分别为jisuanji200.txt、jiaotong214.txt
+
+4、训练模型：python train.py
+
+5、训练兵保存的模型存储在/runs文件夹下，每一个按照训练时间戳为文件夹名进行存储，例如该次训练的生成的文件夹为：1527400164
+
+6、验证模型（使用模型）：
+ python eval.py --eval_train --checkpoint_dir="./runs/1529582704/checkpoints/"
+
+7、使用模型预测结果在:/runs/1527400164/prediction.csv中
+
+8、可以使用tensorboard工具可视化训练的过程，命令行运行：tensorboard --logdir=./runs/1527400164 ，然后在浏览器中输入：http://127.0.0.1:6006/，既可以可视化我们的模型的训练过程。
+
+prediction.csv中一个样本的示例：
+"""
+[计算机],"本期 企鹅 评测 团 产品 — — 华为 MateBookXPro 笔记本电脑   作者 是 一名 普通 公务员   同时 又 是 一名 数码 发烧友   多年 来 一直 沉迷于 各种 新潮 的 数码产品   工作 以后 也 不 忘 通过 数码产品 提升 工作效率   随着 笔记本电脑 市场竞争 的 日益 激烈   再 加上 硬件 性能 不断 提升   越来越 多 的 非 游戏 用户 选择 使用 更加 方便 携带 的 超极本   各大 厂商 自然 也 是 迎合 用户 需求   推出 外观 更加 靓丽   身材 更加 小巧   功能 更加 丰富 的 超极本   
+"""
+其中[计算机],为后面这段样本的分类标签
+
+该数据上分类的结果：二分类的准确率约为0.99左右
+"""
+Total number of test examples: 416
+Accuracy: 0.992788
+Saving evaluation to ./runs/1527402855/checkpoints/../prediction.csv
+"""
+
+关于模型的上线方案：
+1、基于Java的：
+    请参考：
+    https://www.ioiogoo.cn/2018/04/03/java%E8%B0%83%E7%94%A8keras%E3%80%81tensorflow%E6%A8%A1%E5%9E%8B/
+
+2、基于Flask等python的web框架：
+    请参考：https://guillaumegenthial.github.io/serving.html
+
+3、基于google官方的tensorflow Serving框架：
+    请参考：https://www.jianshu.com/p/c1cd2d127ae2 
+    阿里的基于容器部署的方案：https://yq.aliyun.com/articles/60894?spm=a2c4e.11153959.blogcont60601.11.815eea72lw2ij
+
+
+
+
+
+
+
+
+
+
+
+
+
